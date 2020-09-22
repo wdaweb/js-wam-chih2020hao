@@ -51,6 +51,9 @@
       .dead {
         background: url(./死地鼠.png) no-repeat center center/cover;
       }
+      .p {
+        background: linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2));
+      }
       @keyframes boxshadow {
         0% {
           filter: hue-rotate(0deg);
@@ -100,23 +103,25 @@
       </table>
       <br />
       <br />
-      <p>
-        選擇難度:
+      <div class="p">
+        <p>
+          選擇難度:
 
-        <input type="radio" name="diffculty" class="diffculty" value="1500" checked />easy
-        <input type="radio" name="diffculty" class="diffculty" value="1000" />normal
-        <input type="radio" name="diffculty" class="diffculty" value="800" />hard
-        <input type="radio" name="diffculty" class="diffculty" value="500" />hell <br />
-      </p>
-      <input type="button" value="開始遊戲" id="btn_start" />
-      <p>目前分數: <span id="text_score">0</span></p>
-      <p>
-        最高紀錄
-        <br />
-        玩家: <span id="text_highplayer"></span>
-        <br />
-        分數: <span id="text_highscore"></span>
-      </p>
+          <input type="radio" name="diffculty" class="diffculty" value="1500" checked />easy
+          <input type="radio" name="diffculty" class="diffculty" value="1000" />normal
+          <input type="radio" name="diffculty" class="diffculty" value="800" />hard
+          <input type="radio" name="diffculty" class="diffculty" value="500" />hell <br />
+        </p>
+        <input type="button" value="開始遊戲" id="btn_start" />
+        <p>目前分數: <span id="text_score">0</span></p>
+        <p>
+          最高紀錄
+          <br />
+          玩家: <span id="text_highplayer"></span>
+          <br />
+          分數: <span id="text_highscore"></span>
+        </p>
+      </div>
     </div>
     <audio src="./pokemon.mp3" id="pokemon"></audio>
     <script>
