@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      html,
+      body {
+        height: 100%;
+      }
+      body {
+        background: url(./pokemon.png) no-repeat center center/cover;
+        position: relative;
+        cursor: url(./精靈球.png), auto;
+      }
+      #game {
+        background: linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2));
+        box-shadow: 0px 0px 5px rgba(238, 10, 238, 1), 0px 0px 25px rgba(238, 10, 238, 0.8),
+          0px 0px 50px rgba(238, 10, 238, 0.5), 0px 0px 150px rgba(238, 10, 238, 0.3);
+      }
+      .animation {
+        animation: boxshadow 15s infinite;
+      }
+      #game td {
+        position: relative;
+        width: 75px;
+        height: 75px;
+        border: 1px solid #000;
+        text-align: center;
+      }
+      kbd {
+        font-size: 1.5rem;
+        color: aqua;
+      }
+      .game {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        font-size: 1.5rem;
+        font-weight: 700;
+        font-family: "微軟正黑體";
+      }
+      .game p {
+        color: rgb(193, 4, 250);
+      }
+      .live {
+        background: url(./地鼠.png) no-repeat center center/cover;
+      }
+      .dead {
+        background: url(./死地鼠.png) no-repeat center center/cover;
+      }
+      @keyframes boxshadow {
+        0% {
+          filter: hue-rotate(0deg);
+        }
+        25% {
+          filter: hue-rotate(90deg);
+        }
+        50% {
+          filter: hue-rotate(180deg);
+        }
+        75% {
+          filter: hue-rotate(270deg);
+        }
+        100% {
+          filter: hue-rotate(360deg);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="game">
+      <table id="game" class="animation">
+        <tr>
+          <td id="hole1"><kbd>1</kbd></td>
+          <td id="hole2"><kbd>2</kbd></td>
+          <td id="hole3"><kbd>3</kbd></td>
+          <td id="hole4"><kbd>4</kbd></td>
+        </tr>
+        <tr>
+          <td id="holeq"><kbd>Q</kbd></td>
+          <td id="holew"><kbd>W</kbd></td>
+          <td id="holee"><kbd>E</kbd></td>
+          <td id="holer"><kbd>R</kbd></td>
+        </tr>
+        <tr>
+          <td id="holea"><kbd>A</kbd></td>
+          <td id="holes"><kbd>S</kbd></td>
+          <td id="holed"><kbd>D</kbd></td>
+          <td id="holef"><kbd>F</kbd></td>
+        </tr>
+        <tr>
+          <td id="holez"><kbd>Z</kbd></td>
+          <td id="holex"><kbd>X</kbd></td>
+          <td id="holec"><kbd>C</kbd></td>
+          <td id="holev"><kbd>V</kbd></td>
+        </tr>
+      </table>
+      <br />
+      <br />
+      <p>
+        選擇難度:
+
+        <input type="radio" name="diffculty" class="diffculty" value="1500" checked />easy
+        <input type="radio" name="diffculty" class="diffculty" value="1000" />normal
+        <input type="radio" name="diffculty" class="diffculty" value="800" />hard
+        <input type="radio" name="diffculty" class="diffculty" value="500" />hell <br />
+      </p>
+      <input type="button" value="開始遊戲" id="btn_start" />
+      <p>目前分數: <span id="text_score">0</span></p>
+      <p>
+        最高紀錄
+        <br />
+        玩家: <span id="text_highplayer"></span>
+        <br />
+        分數: <span id="text_highscore"></span>
+      </p>
+    </div>
+    <audio src="./pokemon.mp3" id="pokemon"></audio>
+    <script>
+      const btnstart = document.getElementById("btn_start");
+      const holes = document.querySelectorAll("#game td");
+      const textscore = document.getElementById("text_score");
+      const textHighPlayer = document.getElementById("text_highplayer");
+      const textHighScore = document.getElementById("text_highscore");
+      const diffcultys = document.querySelectorAll(".diffculty");
+      const audio = new Audio();
+      const pokemon = document.querySelector("#pokemon");
+      audio.src = "./pokemonGetDaze.mp3";
+      let time = 1500;
+
+      let score = 0;
+      let isInGame = false;
+      let timmer = 0;
+
+      let highscore = { name: "palyer", score: 0 };
+      const highscoreStorage = JSON.parse(localStorage.getItem("highscore"));
+      if (highscoreStorage !== null) {
+        highscore = highscoreStorage;
+        textHighPlayer.innerText = highscore.name;
+        textHighScore.innerText = highscore.score;
+      }
+
+      btnstart.onclick = () => {
+        btnstart.disabled = true;
+        document.querySelector("#game").classList.remove("animation");
+
+        for (let diffculty of diffcultys) {
+          if (diffculty.checked) {
+            time = diffculty.value;
+          }
+        }
+
+        score = 0;
+        textscore.innerText = score;
+        isInGame = true;
+
+        timmer = setInterval(game, time);
+        game();
+        pokemon.play();
+        setTimeout(end, 30000);
+      };
+
+      const game = () => {
+        for (let hole of holes) {
+          hole.classList.remove("live");
+          hole.classList.remove("dead");
+        }
+        const j = Math.floor(Math.random() * 3) + 1;
+        for (let i = 0; i < j; i++) {
+          const random = Math.floor(Math.random() * 9);
+          if (holes[random].classList.contains("live")) {
+            i--;
+          }
+          holes[random].classList.add("live");
+        }
+      };
+
+      const end = () => {
+        clearInterval(timmer);
+        pokemon.pause();
+        pokemon.currentTime = 0;
+        document.querySelector("#game").classList.add("animation");
+
+        for (let hole of holes) {
+          hole.classList.remove("live");
+          hole.classList.remove("dead");
+        }
+
+        btnstart.disabled = false;
+        alert(`你的分數是${score}`);
+
+        if (highscoreStorage === null || highscore.score < score) {
+          audio.play();
+          const name = prompt("最高分!請輸入你的名字");
+          highscore.score = score;
+          highscore.name = name || "palyer";
+          localStorage.setItem("highscore", JSON.stringify(highscore));
+          textHighPlayer.innerText = highscore.name;
+          textHighScore.innerText = highscore.score;
+        }
+      };
+
+      for (let hole of holes) {
+        hole.onclick = () => {
+          if (hole.classList.contains("live") && !hole.classList.contains("dead")) {
+            hole.classList.add("dead");
+            if (time == 1500) {
+              score++;
+            } else if (time == 1000) {
+              score += 2;
+            } else if (time == 800) {
+              score += 5;
+            } else if (time == 500) {
+              score += 10;
+            }
+            textscore.innerText = score;
+          } else {
+            if (time == 500) {
+              score -= 10;
+            } else if (time == 800) {
+              score -= 5;
+            }
+            textscore.innerText = score;
+          }
+        };
+      }
+
+      document.onkeydown = (event) => {
+        const key = event.key;
+        console.log(document.querySelector(`#hole${key}`));
+        if (isInGame) {
+          const target = document.getElementById(`hole${key}`);
+          console.log(target);
+          if (target.classList.contains("live") && !target.classList.contains("dead")) {
+            target.classList.add("dead");
+
+            if (time == 1500) {
+              score++;
+            } else if (time == 1000) {
+              score += 2;
+            } else if (time == 800) {
+              score += 5;
+            } else if (time == 500) {
+              score += 10;
+            }
+            textscore.innerText = score;
+          } else {
+            if (time == 500) {
+              score -= 10;
+            } else if (time == 800) {
+              score -= 5;
+            }
+            textscore.innerText = score;
+          }
+        }
+      };
+    </script>
+  </body>
+</html>
