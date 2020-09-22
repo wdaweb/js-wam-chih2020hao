@@ -173,13 +173,15 @@
           hole.classList.remove("live");
           hole.classList.remove("dead");
         }
+        let y = [];
         const j = Math.floor(Math.random() * 3) + 1;
         for (let i = 0; i < j; i++) {
           const random = Math.floor(Math.random() * 9);
-          if (holes[random].classList.contains("live")) {
+          if (holes[random].classList.contains("live") || y.includes(`hole${random}`)) {
             i--;
           }
           holes[random].classList.add("live");
+          y.push(`hole${random}`);
         }
       };
 
