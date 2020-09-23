@@ -12,7 +12,7 @@
       body {
         background: url(./pokemon.png) no-repeat center center/cover;
         position: relative;
-        cursor: url(./精靈球.png), auto;
+        cursor: url(./精靈球.png) 16 16, auto;
       }
       #game {
         background: rgba(0, 0, 0, 0.5);
@@ -30,7 +30,7 @@
         text-align: center;
       }
       kbd {
-        font-size: 1.5rem;
+        font-size: 2rem;
         color: aqua;
       }
       .game {
@@ -168,20 +168,28 @@
         setTimeout(end, 30000);
       };
 
+      let w = [];
+      let y = [];
       const game = () => {
         for (let hole of holes) {
           hole.classList.remove("live");
           hole.classList.remove("dead");
         }
-        let y = [];
-        const j = Math.floor(Math.random() * 3) + 1;
+        const j = Math.floor(Math.random() * 4) + 1;
+        w.push(j);
         for (let i = 0; i < j; i++) {
-          const random = Math.floor(Math.random() * 9);
+          const random = Math.floor(Math.random() * 16);
           if (holes[random].classList.contains("live") || y.includes(`hole${random}`)) {
             i--;
+          } else {
+            holes[random].classList.add("live");
+            y.push(`hole${random}`);
           }
-          holes[random].classList.add("live");
-          y.push(`hole${random}`);
+        }
+        if (w.length > 1) {
+          let z = w[w.length - 1];
+          y.splice(0, z);
+          console.log(y);
         }
       };
 
@@ -190,6 +198,8 @@
         pokemon.pause();
         pokemon.currentTime = 0;
         document.querySelector("#game").classList.add("animation");
+        w = [];
+        y = [];
 
         for (let hole of holes) {
           hole.classList.remove("live");
