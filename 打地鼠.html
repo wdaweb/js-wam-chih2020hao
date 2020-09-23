@@ -21,7 +21,7 @@
         transform: translateX(15%);
       }
       .animation {
-        animation: boxshadow 15s infinite;
+        animation: boxshadow 10s infinite;
       }
       #game td {
         position: relative;
@@ -60,19 +60,19 @@
       }
       @keyframes boxshadow {
         0% {
-          filter: hue-rotate(0deg);
+          filter: hue-rotate(0deg) blur(5px);
         }
         25% {
-          filter: hue-rotate(90deg);
+          filter: hue-rotate(90deg) blur(1px);
         }
         50% {
-          filter: hue-rotate(180deg);
+          filter: hue-rotate(180deg) blur(5px);
         }
         75% {
-          filter: hue-rotate(270deg);
+          filter: hue-rotate(270deg) blur(1px);
         }
         100% {
-          filter: hue-rotate(360deg);
+          filter: hue-rotate(360deg) blur(5px);
         }
       }
     </style>
@@ -167,7 +167,7 @@
         }
       };
 
-      let highscore = { name: "palyer", score: 0 };
+      let highscore = { name: "寶可夢大師", score: 0 };
       const highscoreStorage = JSON.parse(localStorage.getItem("highscore"));
       if (highscoreStorage !== null) {
         highscore = highscoreStorage;
@@ -245,7 +245,7 @@
           audio.play();
           const name = prompt("最高分!請輸入你的名字");
           highscore.score = score;
-          highscore.name = name || "palyer";
+          highscore.name = name || "寶可夢大師";
           localStorage.setItem("highscore", JSON.stringify(highscore));
           textHighPlayer.innerText = highscore.name;
           textHighScore.innerText = highscore.score;
