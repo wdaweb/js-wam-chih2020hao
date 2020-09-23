@@ -186,10 +186,10 @@
             y.push(`hole${random}`);
           }
         }
-        if (w.length > 1) {
-          let z = w[w.length - 1];
+        if (w.length == 2) {
+          let z = w[0];
           y.splice(0, z);
-          console.log(y);
+          w.splice(0, 1);
         }
       };
 
