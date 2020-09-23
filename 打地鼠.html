@@ -54,6 +54,9 @@
       .p {
         background: rgba(0, 0, 0, 0.5);
       }
+      .hide {
+        display: none;
+      }
       @keyframes boxshadow {
         0% {
           filter: hue-rotate(0deg);
@@ -101,8 +104,7 @@
           <td id="holev"><kbd>V</kbd></td>
         </tr>
       </table>
-      <br />
-      <br />
+      <button id="cheat" class="hide" style="height: 50px; width: 100px">CHEAT</button>
       <div class="p">
         <p>
           選擇難度:
@@ -121,6 +123,7 @@
           <br />
           分數: <span id="text_highscore"></span>
         </p>
+        <button id="clear">清除最高紀錄</button>
       </div>
     </div>
     <audio src="./pokemon.mp3" id="pokemon"></audio>
@@ -133,12 +136,28 @@
       const diffcultys = document.querySelectorAll(".diffculty");
       const audio = new Audio();
       const pokemon = document.querySelector("#pokemon");
+      const cheat = document.querySelector("#cheat");
       audio.src = "./pokemonGetDaze.mp3";
-      let time = 1500;
 
+      let time = 1500;
       let score = 0;
       let isInGame = false;
       let timmer = 0;
+      let gameTime = 0;
+
+      document.querySelector("#clear").onclick = () => {
+        localStorage.removeItem("highscore");
+        textHighPlayer.innerText = "";
+        textHighScore.innerText = "";
+      };
+      cheat.onclick = () => {
+        if (isInGame) {
+          score -= 1000;
+          text_score.innerText = score;
+          alert("還敢作弊阿冰鳥!");
+          end();
+        }
+      };
 
       let highscore = { name: "palyer", score: 0 };
       const highscoreStorage = JSON.parse(localStorage.getItem("highscore"));
@@ -150,6 +169,8 @@
 
       btnstart.onclick = () => {
         btnstart.disabled = true;
+        cheat.classList.remove("hide");
+        document.querySelector("#clear").disabled = true;
         document.querySelector("#game").classList.remove("animation");
 
         for (let diffculty of diffcultys) {
@@ -165,7 +186,7 @@
         timmer = setInterval(game, time);
         game();
         pokemon.play();
-        setTimeout(end, 30000);
+        gameTime = setTimeout(end, 30000);
       };
 
       let w = [];
@@ -195,11 +216,13 @@
 
       const end = () => {
         clearInterval(timmer);
+        clearTimeout(gameTime);
         pokemon.pause();
         pokemon.currentTime = 0;
         document.querySelector("#game").classList.add("animation");
         w = [];
         y = [];
+        cheat.classList.add("hide");
 
         for (let hole of holes) {
           hole.classList.remove("live");
@@ -207,9 +230,10 @@
         }
 
         btnstart.disabled = false;
+        document.querySelector("#clear").disabled = false;
         alert(`你的分數是${score}`);
 
-        if (highscoreStorage === null || highscore.score < score) {
+        if ((highscoreStorage === null || highscore.score < score) && score > 0) {
           audio.play();
           const name = prompt("最高分!請輸入你的名字");
           highscore.score = score;
